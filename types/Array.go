@@ -19,7 +19,7 @@ func (arr Array[Covered]) Empty() bool {
 	return len(arr) == 0
 }
 
-func (arr Array[Covered]) Length() int {
+func (arr Array[Covered]) Size() int {
 	return len(arr)
 }
 
@@ -28,16 +28,16 @@ func (arr Array[Covered]) Capacity() int {
 }
 
 func (arr Array[Covered]) At(index int) Covered {
-	if index >= arr.Length() {
+	if index >= arr.Size() {
 		return traits.Empty[Covered]()
 	}
 
 	if index < 0 {
 		index *= -1
-		if index >= arr.Length() {
+		if index >= arr.Size() {
 			return traits.Empty[Covered]()
 		}
-		index = arr.Length() - index
+		index = arr.Size() - index
 	}
 
 	return arr[index]
@@ -48,38 +48,38 @@ func (arr Array[Covered]) First() Covered {
 }
 
 func (arr Array[Covered]) Last() Covered {
-	return arr[arr.Length()-1]
+	return arr[arr.Size()-1]
 }
 
-func (arr Array[Covered]) ForEach(callable func(item Covered)) {
-	for _, item := range arr {
-		callable(item)
+func (arr Array[Covered]) ForEach(callable func(index any, item Covered)) {
+	for index, item := range arr {
+		callable(index, item)
 	}
 }
 
-func (arr Array[Covered]) Map(mapper func(item Covered) any) interfaces.Iterable[any] {
+func (arr Array[Covered]) Map(mapper func(index any, item Covered) any) interfaces.Iterable[any] {
 	result := Array[any]{}
 
-	for _, item := range arr {
-		result = result.Append(mapper(item))
+	for index, item := range arr {
+		result = result.Append(mapper(index, item))
 	}
 	return result
 }
 
-func (arr Array[Covered]) Where(predicate func(item Covered) bool) interfaces.Iterable[Covered] {
-	result := make(Array[Covered], 0, arr.Length())
+func (arr Array[Covered]) Where(predicate func(index any, item Covered) bool) interfaces.Iterable[Covered] {
+	result := make(Array[Covered], 0, arr.Size())
 
-	for _, item := range arr {
-		if predicate(item) {
+	for index, item := range arr {
+		if predicate(index, item) {
 			result = result.Append(item)
 		}
 	}
 	return result
 }
 
-func (arr Array[Covered]) FirstWhere(predicate func(item Covered) bool) Covered {
-	for _, item := range arr {
-		if predicate(item) {
+func (arr Array[Covered]) FirstWhere(predicate func(index any, item Covered) bool) Covered {
+	for index, item := range arr {
+		if predicate(index, item) {
 			return item
 		}
 	}

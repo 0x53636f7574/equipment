@@ -1,11 +1,13 @@
 package interfaces
 
 type Iterable[Covered any] interface {
-	ForEach(func(Covered))
+	Size() int
 
-	Map(func(Covered) any) Iterable[any]
+	ForEach(func(any, Covered))
 
-	Where(func(Covered) bool) Iterable[Covered]
+	Map(func(any, Covered) any) Iterable[any]
 
-	FirstWhere(func(Covered) bool) Covered
+	Where(func(any, Covered) bool) Iterable[Covered]
+
+	FirstWhere(func(any, Covered) bool) Covered
 }
